@@ -1,0 +1,3 @@
+"""Exact finite discounted-MDP planning with inspectable residual certificates."""
+from .core import audit,evaluate_policy,value_iteration,policy_iteration
+__all__=['audit','evaluate_policy','value_iteration','policy_iteration']
