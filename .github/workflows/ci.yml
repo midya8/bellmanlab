@@ -31,3 +31,8 @@ jobs:
       - run: python -m bellmanlab audit examples/residual.json --values '[0]'
       - run: python -m bellmanlab value examples/residual.json --sweeps 256 --tolerance '[1,10]' > /tmp/value.json
       - run: PYTHONPATH=. python examples/render_audit.py --check
+      - run: python -m bellmanlab robust-demo > /tmp/robust-demo.json
+      - run: python -m bellmanlab robust-audit examples/robust.json --values '[0]'
+      - run: python -m bellmanlab robust-value examples/robust.json --sweeps 32 --tolerance '[1,1000000]' > /tmp/robust-value.json
+      - run: python -m bellmanlab robust-value examples/robust.json --policy '[0]' > /tmp/robust-policy.json
+      - run: PYTHONPATH=. python examples/render_robust.py --check
