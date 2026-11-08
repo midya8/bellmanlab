@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "scenarios": [
+    {
+      "version": 1,
+      "discount": [
+        1,
+        2
+      ],
+      "states": [
+        {
+          "actions": [
+            {
+              "reward": [
+                2,
+                5
+              ],
+              "transitions": [
+                {
+                  "next": 0,
+                  "prob": 1
+                }
+              ]
+            },
+            {
+              "reward": [
+                1,
+                5
+              ],
+              "transitions": [
+                {
+                  "next": 0,
+                  "prob": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "discount": [
+        1,
+        2
+      ],
+      "states": [
+        {
+          "actions": [
+            {
+              "reward": [
+                -2,
+                5
+              ],
+              "transitions": [
+                {
+                  "next": 0,
+                  "prob": 1
+                }
+              ]
+            },
+            {
+              "reward": [
+                1,
+                5
+              ],
+              "transitions": [
+                {
+                  "next": 0,
+                  "prob": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
