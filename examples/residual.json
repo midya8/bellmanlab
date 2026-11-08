@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "discount": [
+    99,
+    100
+  ],
+  "states": [
+    {
+      "actions": [
+        {
+          "reward": [
+            1,
+            100
+          ],
+          "transitions": [
+            {
+              "next": 0,
+              "prob": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
