@@ -8,22 +8,22 @@ Strict schema/index/row validation precedes planning. Scope caps are 16 states, 
 
 ## Bellman contraction and the value-error certificate
 
-For a vector v, Q_v(s,a)=r(s,a)+g*sum P(s'|s,a)*v(s'), and (Tv)(s)=max_a Q_v(s,a). Max is nonexpansive in the sup norm and each probability row is nonnegative with unit sum, so ||Tv-Tw||<=g||v-w||. The unique discounted fixed point v* satisfies Tv*=v*. The triangle inequality gives
+For a vector v, `Q_v(s,a)=r(s,a)+g*sum P(s'|s,a)*v(s')`, and `(Tv)(s)=max_a Q_v(s,a)`. Max is nonexpansive in the sup norm and each probability row is nonnegative with unit sum, so ||Tv-Tw||<=g||v-w||. The unique discounted fixed point v_star satisfies Tv_star=v_star. The triangle inequality gives
 
-    ||v-v*|| <= ||v-Tv|| + ||Tv-Tv*||
-               <= residual + g||v-v*||
+    ||v-v_star|| <= ||v-Tv|| + ||Tv-Tv_star||
+               <= residual + g||v-v_star||
 
-Rearrange using 1-g>0 to obtain `||v-v*|| <= residual/(1-g)`. BellmanLab evaluates the residual and division exactly. This is a deterministic value-function error bound for the supplied model, not a statistical interval or greedy-policy-loss bound. It may be loose. The one-state self-loop example makes it tight at every checkpoint, so the demo exposes misuse without relying on a loose certificate.
+Rearrange using 1-g>0 to obtain `||v-v_star|| <= residual/(1-g)`. BellmanLab evaluates the residual and division exactly. This is a deterministic value-function error bound for the supplied model, not a statistical interval or greedy-policy-loss bound. It may be loose. The one-state self-loop example makes it tight at every checkpoint, so the demo exposes misuse without relying on a loose certificate.
 
 Value iteration uses synchronous vectors: every state backup reads the previous whole vector, never a partially updated sweep. It returns the initial audit, then one audit per completed sweep. The final residual is computed on the final returned vector. Tolerance gates the certified bound, not the raw residual or the last adjacent-vector difference. Zero sweeps still return an initial audit. A finite sweep cap can yield `converged=false`; no optimality is inferred from having used the budget. At most 256 backups plus 257 audits are allowed. In implementation the already-computed Bellman vector from an audit supplies the next synchronous vector, so each audit performs exactly one full model transition read pass; no extra hidden pass is charged for copying the vector.
 
-The transition-read counter counts every stored successor entry of every action once per audit, even at zero discount or zero probability. Planned reads are (requested_sweeps+1)*stored_entries, an upper bound if early stopping occurs. Executed reads are number_of_returned_audits*stored_entries. This does not count validation, set work, arithmetic operations, integer bit widths, comparisons, serialization or any policy-evaluation work. No FLOP, speedup, wall-time or byte-memory comparison follows.
+The transition-read counter counts every stored successor entry of every action once per audit, even at zero discount or zero probability. Planned reads are `(requested_sweeps+1)*stored_entries`, an upper bound if early stopping occurs. Executed reads are `number_of_returned_audits*stored_entries`. This does not count validation, set work, arithmetic operations, integer bit widths, comparisons, serialization or any policy-evaluation work. No FLOP, speedup, wall-time or byte-memory comparison follows.
 
 ## Policy evaluation and improvement
 
 For a deterministic stationary policy pi, solve `(I-g*P_pi)v = r_pi` exactly by Gauss-Jordan elimination. Discounting makes this matrix invertible: if (I-gP)x=0, then ||x||=||gPx||<=g||x|| forces x=0. Nonzero rational pivots, including row swaps, avoid a floating singularity tolerance. Recompute all policy Bellman equations and assert exact equality after solving.
 
-Policy-equation residual zero proves correct evaluation of this policy, not its optimality. The separate optimality operator audit checks all actions. If its residual is zero, the policy's value is v*, though other optimal policies can exist.
+Policy-equation residual zero proves correct evaluation of this policy, not its optimality. The separate optimality operator audit checks all actions. If its residual is zero, the policy's value is v_star, though other optimal policies can exist.
 
 Policy improvement retains the old action if it belongs to the exact greedy set. Otherwise choose the first maximizing action index. Thus any change is a strict Q-value improvement somewhere, not a gratuitous tie switch. The standard improvement argument gives the next evaluated policy a componentwise nondecreasing value; the implementation asserts this for successive returned evaluations. A stable policy has T_pi v = Tv = v and hence is optimal by uniqueness of the contraction fixed point. A cap of 64 evaluations is an operational bound, not a universal number of iterations needed for every supported MDP. If the cap is hit before stability, return the last evaluated policy/values and `optimal=false`. The proposed improved policy remains visible in that history row, but is not passed off as already evaluated.
 
