@@ -1,0 +1,789 @@
+[
+  {
+    "name": "randomization gap",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          1,
+          2
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 0,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 2,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          0,
+          1
+        ]
+      ],
+      "initial": [
+        1
+      ],
+      "budget": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "name": "visitation reweighting",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          1,
+          2
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 0,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 0,
+                "transitions": [
+                  {
+                    "next": 1,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "reward": 2,
+                "transitions": [
+                  {
+                    "next": 1,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          0,
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "initial": [
+        1,
+        0
+      ],
+      "budget": [
+        1,
+        4
+      ]
+    }
+  },
+  {
+    "name": "unreachable states",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          2,
+          3
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 1,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 2,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "reward": 99,
+                "transitions": [
+                  {
+                    "next": 1,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": -99,
+                "transitions": [
+                  {
+                    "next": 1,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          0,
+          2
+        ],
+        [
+          100,
+          -100
+        ]
+      ],
+      "initial": [
+        1,
+        0
+      ],
+      "budget": 1
+    }
+  },
+  {
+    "name": "zero discount",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": 0,
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 0,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 0,
+                "transitions": [
+                  {
+                    "next": 1,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "reward": 2,
+                "transitions": [
+                  {
+                    "next": 1,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          0,
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "initial": [
+        1,
+        0
+      ],
+      "budget": [
+        1,
+        4
+      ]
+    }
+  },
+  {
+    "name": "infeasible budget",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          1,
+          2
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 0,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 2,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          1,
+          2
+        ]
+      ],
+      "initial": [
+        1
+      ],
+      "budget": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "name": "signed costs",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          3,
+          4
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": -3,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": -1,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          -2,
+          0
+        ]
+      ],
+      "initial": [
+        1
+      ],
+      "budget": -1
+    }
+  },
+  {
+    "name": "slack budget",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          1,
+          2
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 0,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 2,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          0,
+          1
+        ]
+      ],
+      "initial": [
+        1
+      ],
+      "budget": 3
+    }
+  },
+  {
+    "name": "flat optimal face",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          1,
+          2
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 1,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 1,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          0,
+          1
+        ]
+      ],
+      "initial": [
+        1
+      ],
+      "budget": 1
+    }
+  },
+  {
+    "name": "duplicate points",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          1,
+          2
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 1,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 1,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 2,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          0,
+          0,
+          2
+        ]
+      ],
+      "initial": [
+        1
+      ],
+      "budget": 1
+    }
+  },
+  {
+    "name": "stochastic polygon",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          2,
+          3
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 0,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 2,
+                "transitions": [
+                  {
+                    "next": 1,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "reward": 1,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": [
+                      1,
+                      2
+                    ]
+                  },
+                  {
+                    "next": 1,
+                    "prob": [
+                      1,
+                      2
+                    ]
+                  }
+                ]
+              },
+              {
+                "reward": 3,
+                "transitions": [
+                  {
+                    "next": 1,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "initial": [
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "budget": [
+        3,
+        2
+      ]
+    }
+  },
+  {
+    "name": "four state",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          3,
+          4
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 0,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": [
+                      1,
+                      2
+                    ]
+                  },
+                  {
+                    "next": 1,
+                    "prob": [
+                      1,
+                      2
+                    ]
+                  }
+                ]
+              },
+              {
+                "reward": 1,
+                "transitions": [
+                  {
+                    "next": 2,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "reward": 2,
+                "transitions": [
+                  {
+                    "next": 1,
+                    "prob": [
+                      1,
+                      2
+                    ]
+                  },
+                  {
+                    "next": 3,
+                    "prob": [
+                      1,
+                      2
+                    ]
+                  }
+                ]
+              },
+              {
+                "reward": -1,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "reward": 3,
+                "transitions": [
+                  {
+                    "next": 2,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 1,
+                "transitions": [
+                  {
+                    "next": 3,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "reward": 0,
+                "transitions": [
+                  {
+                    "next": 3,
+                    "prob": 1
+                  }
+                ]
+              },
+              {
+                "reward": 2,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          0,
+          2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "initial": [
+        [
+          1,
+          2
+        ],
+        0,
+        [
+          1,
+          2
+        ],
+        0
+      ],
+      "budget": 1
+    }
+  },
+  {
+    "name": "singleton boundary",
+    "input": {
+      "version": 1,
+      "model": {
+        "version": 1,
+        "discount": [
+          99,
+          100
+        ],
+        "states": [
+          {
+            "actions": [
+              {
+                "reward": 1,
+                "transitions": [
+                  {
+                    "next": 0,
+                    "prob": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "costs": [
+        [
+          1
+        ]
+      ],
+      "initial": [
+        1
+      ],
+      "budget": 1
+    }
+  }
+]
