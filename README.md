@@ -164,3 +164,20 @@ bellmanlab-occupancy demo --control randomization_gap
 ```
 
 This is a supplied discounted finite model with **one normalized expected-cost constraint**, not a hard trajectory guarantee, new learning method or scalable optimizer. Limits are four states/eight actions; the hull is a two-dimensional return projection, not the full occupancy polytope. All optimal polygon vertices are returned, not all tied policies. Zero-visit first-action fallbacks are arbitrary and labeled. A separate direct LP oracle does operate on full occupancy vertices. All original ordinary/rectangular robust APIs, CLI, three figures and original test sources stay unchanged; this does not combine robust uncertainty with the new constraint. See the exact scaling, independent-check limitations, numerical tolerances and seven-source ledger in [OCCUPANCY.md](OCCUPANCY.md).
+
+## Two budgets. One policy.
+
+[Two-budget full-occupancy inspector](https://midya8.github.io/bellmanlab/coupled.html) · [Contract, derivation, checks and sources](COUPLED.md)
+
+BellmanLab0.5 adds a separate exact workflow for **two simultaneous normalized expected-cost bounds**. It retains every full feasible state/action occupancy vertex, even when different occupancies have identical cost/reward projections, then extracts a stationary randomized policy and checks a matching two-price dual bound. A jointly impossible pair gets a weighted minimum-cost separating certificate, not a failed deterministic search or fake plan.
+
+The default's three actions have `(reward,cost0,cost1)=(0,0,0),(3,1,0),(2,0,1)`. Budgets`1/3,1/4` require optimal weights`5/12,1/3,1/4`: reward`3/2`, versus0for the best feasible deterministic policy. No pair of deterministic policies attains that optimum. Another control has separately attainable budgets that are jointly impossible, with an exact separating gap`1/6`. The route control distinguishes a three-policy episode mixture from visit-reweighted local probabilities; direct row averaging violates both budgets.
+
+```sh
+python -m bellmanlab.coupled_cli demo --control three_way
+python -m bellmanlab.coupled_cli run input.json > report.json
+python -m bellmanlab.coupled_cli verify report.json
+bellmanlab-coupled demo --control jointly_impossible
+```
+
+The independent determinant/policy-simplex checker reconstructs all full vertices and every dependent certificate field without generator solving/basis/assembly helpers. Valid alternative proof multipliers are accepted.103Python/8Node tests,822complete native/BigInt reports, actual HiGHS solves, fresh installed-wheel reproduction and actual Chrome/download checks are documented with their precise limits in [COUPLED.md](COUPLED.md). This remains supplied finite dynamics, a common discount and expectations, not learned behavior or per-trajectory safety. Original ordinary, rectangular robust and one-budget source/test files remain unchanged; a small link is added to the earlier browser page.
