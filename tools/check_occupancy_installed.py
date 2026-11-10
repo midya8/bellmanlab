@@ -7,12 +7,16 @@ import sys
 import tempfile
 
 
-def run(args,**kwargs):return subprocess.run(args,check=True,capture_output=True,text=True,**kwargs)
+def run(args,**kwargs):
+    try:return subprocess.run(args,check=True,capture_output=True,text=True,**kwargs)
+    except subprocess.CalledProcessError as e:
+        print(e.stdout or '',file=sys.stderr);print(e.stderr or '',file=sys.stderr)
+        raise
 
 def main():
     root=Path(__file__).resolve().parents[1]
     with tempfile.TemporaryDirectory()as td:
-        tmp=Path(td);run([sys.executable,'-m','pip','wheel','--no-deps','--no-build-isolation','-w',str(tmp),str(root)])
+        tmp=Path(td);run([sys.executable,'-m','pip','wheel','--no-deps','-w',str(tmp),str(root)])
         run([sys.executable,'-m','venv',str(tmp/'env')]);py=tmp/'env'/('Scripts/python.exe'if os.name=='nt'else'bin/python');cli=py.with_name('bellmanlab-occupancy');oldcli=py.with_name('bellmanlab')
         wheel=next(tmp.glob('*.whl'));run([str(py),'-m','pip','install','--no-deps',str(wheel)],cwd=tmp)
         proof=run([str(py),'-c','import bellmanlab, bellmanlab.core, bellmanlab.robust, bellmanlab.robust_policy, bellmanlab.occupancy, bellmanlab.occupancy_check, bellmanlab.occupancy_demo, bellmanlab.occupancy_cli; import pathlib; modules=[bellmanlab.core,bellmanlab.robust,bellmanlab.robust_policy,bellmanlab.occupancy,bellmanlab.occupancy_check,bellmanlab.occupancy_demo,bellmanlab.occupancy_cli];assert all("site-packages" in m.__file__ for m in modules);print(len(modules))'],cwd=tmp);assert proof.stdout.strip()=='7'
