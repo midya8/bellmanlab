@@ -1,8 +1,55 @@
 # BellmanLab
 
-Exact rational planning for small supplied discounted Markov decision processes. Dependency-free Python 3.10+, strict JSON CLI, full iteration histories and independently tested certificates. This is model-based planning, not learning an environment from samples.
+BellmanLab plans in small supplied discounted Markov decision processes. Inspect
+exact values and stopping certificates, rectangular scenario uncertainty, or
+stationary randomized policies under one or two expected-cost budgets. Python
+3.10+, standard library only. The dynamics are supplied, not learned from samples.
+
+| Question | Start here | Limit |
+| --- | --- | --- |
+| Is the value accurate enough to stop? | [Residual example](#a-small-residual-can-hide-a-large-value-error) | A raw residual is not a value-error tolerance. |
+| What changes under scenario uncertainty? | [Rectangular planning](#finite-scenario-rectangular-robust-planning) | Nature may choose a different scenario row at each state/action. |
+| Has each proposed policy actually been evaluated? | [Nested policy iteration](#exact-nested-controller-and-adversary-policy-iteration) | Inner and outer caps have different meanings. |
+| How does one budget change the policy? | [One-budget inspector](https://midya8.github.io/bellmanlab/) | Episode mixtures are not local-row averages. |
+| Can one policy meet two budgets at once? | [Two-budget inspector](https://midya8.github.io/bellmanlab/coupled.html) | Expected-cost bounds are not per-trajectory guarantees. |
 
 ![Bellman residual, certified value error and actual value error on the same scale](assets/bellman-audit.svg)
+
+## The policy between the policies: one expected-cost budget
+
+[Interactive exact occupancy inspector](https://midya8.github.io/bellmanlab/) · [Contract, derivation and inspected source ledger](OCCUPANCY.md)
+
+An equal initial mixture of "wait forever" and "exit now" policies is **not** a half-exit stationary policy. The two policies visit the decision state at different rates. In the default model their equal mixture has state0mass3/4 and exit occupancy1/4, so the equivalent local exit probability is1/3. Directly averaging the local rows gives cost1/3 and violates the normalized budget1/4. A separate one-state control gives a randomized optimum strictly better than every feasible deterministic policy; a tied correct Lagrange multiplier still needs a feasible primal mixture.
+
+The separate occupancy API enumerates every deterministic policy, constructs the exact attainable cost/reward projection, clips its budget, and returns a two-policy occupancy witness, normalized local action probabilities, every flow row, a re-solved stationary occupancy and a matching dual upper bound. Every action's Bellman inequality and complementarity product is visible. A truly impossible budget gets an attainable minimum-cost lower certificate, not a fake plan. Unreachable states, zero discount, signed costs, slack budgets, whole tied faces, coincident projections and point/line geometry have explicit controls.
+
+The fourth workflow adds18Python tests to the retained70. Native Gauss-Jordan/monotone-chain generation and a separate Cramer/supporting-line checker agree with the browser's exact BigInt reports on861complete inputs. An extra direct full-flow-LP vertex oracle checks28controls/seededmodels. Actual optional SciPy1.15.3/HiGHS solves the full constrained and minimum-cost LPs1,722times across861cases, with explicit numerical tolerance, not an exact arithmetic claim for HiGHS. Four Node/actual-Chrome tests include every policy/feasible vertex, displayed flow/slack rows at1280/390/320 and12trusted completed JSON downloads. Fresh installed-wheel checks preserve all three earlier demo families and both existing entrypoints.
+
+```sh
+python -m bellmanlab.occupancy_cli demo --control visitation_reweighting
+python -m bellmanlab.occupancy_cli run input.json > certificate.json
+python -m bellmanlab.occupancy_cli verify certificate.json
+bellmanlab-occupancy demo --control randomization_gap
+```
+
+This is a supplied discounted finite model with **one normalized expected-cost constraint**, not a hard trajectory guarantee, new learning method or scalable optimizer. Limits are four states/eight actions; the hull is a two-dimensional return projection, not the full occupancy polytope. All optimal polygon vertices are returned, not all tied policies. Zero-visit first-action fallbacks are arbitrary and labeled. A separate direct LP oracle does operate on full occupancy vertices. All original ordinary/rectangular robust APIs, CLI, three figures and original test sources stay unchanged; this does not combine robust uncertainty with the new constraint. See the exact scaling, independent-check limitations, numerical tolerances and seven-source ledger in [OCCUPANCY.md](OCCUPANCY.md).
+
+## Two budgets. One policy.
+
+[Two-budget full-occupancy inspector](https://midya8.github.io/bellmanlab/coupled.html) · [Contract, derivation, checks and sources](COUPLED.md)
+
+BellmanLab 0.5 adds a separate exact workflow for **two simultaneous normalized expected-cost bounds**. It retains every full feasible state/action occupancy vertex, even when different occupancies have identical cost/reward projections, then extracts a stationary randomized policy and checks a matching two-price dual bound. A jointly impossible pair gets a weighted minimum-cost separating certificate, not a failed deterministic search or fake plan.
+
+The default's three actions have `(reward,cost0,cost1)=(0,0,0),(3,1,0),(2,0,1)`. Budgets `1/3,1/4` require optimal weights `5/12,1/3,1/4`: reward `3/2`, versus 0 for the best feasible deterministic policy. No pair of deterministic policies attains that optimum. Another control has separately attainable budgets that are jointly impossible, with an exact separating gap `1/6`. The route control distinguishes a three-policy episode mixture from visit-reweighted local probabilities; direct row averaging violates both budgets.
+
+```sh
+python -m bellmanlab.coupled_cli demo --control three_way
+python -m bellmanlab.coupled_cli run input.json > report.json
+python -m bellmanlab.coupled_cli verify report.json
+bellmanlab-coupled demo --control jointly_impossible
+```
+
+The independent determinant/policy-simplex checker reconstructs all full vertices and every dependent certificate field without generator solving/basis/assembly helpers. Valid alternative proof multipliers are accepted.103 Python/8 Node tests, 822 complete native/BigInt reports, actual HiGHS solves, fresh installed-wheel reproduction and actual Chrome/download checks are documented with their precise limits in [COUPLED.md](COUPLED.md). This remains supplied finite dynamics, a common discount and expectations, not learned behavior or per-trajectory safety. Original ordinary, rectangular robust and one-budget source/test files remain unchanged; a small link is added to the earlier browser page.
 
 ## A small residual can hide a large value error
 
@@ -145,39 +192,3 @@ The same prescribed one-state model exposes both independent caps:
 70 total tests add 12 exact nested-policy tests and four third-SVG tests to the retained 54 checks. On the same 243-model exhaustive grid, another independent enumeration of 3,888 controller/adversary Cramer solutions verifies every exact fixed-controller value, each returned nature witness, the final controller/nature pair, inner value decrease, outer value increase, minimizing/greedy tie sets, residual bounds and evaluation counters. Additional tests cover both cap failures, withheld outer improvement, retained controller/nature ties, negative rewards, tiny exact advantages, a 16-state chain, invalid policies/budgets, output isolation and CLI modes. Third-SVG tests check all 15 displayed result cells, full exact nested metadata, regeneration and changed-undisplayed-certificate rejection. The eight-module v0.3 wheel reproduces the policy demo outside the source tree. Both prior SVGs remain byte-reproducible.
 
 This is exact supplied rectangular-model planning when stability is reached, not a new learning algorithm, statistical confidence set, coupled-uncertainty solver, unique-policy guarantee or real-world safety claim. Exact rational linear solves alone establish the value of their evaluated policy pair; the separate inner and outer stability checks establish the stronger robust-policy and optimality claims.
-
-## The policy between the policies: one expected-cost budget
-
-[Interactive exact occupancy inspector](https://midya8.github.io/bellmanlab/) · [Contract, derivation and inspected source ledger](OCCUPANCY.md)
-
-An equal initial mixture of “wait forever” and “exit now” policies is **not** a half-exit stationary policy. The two policies visit the decision state at different rates. In the default model their equal mixture has state0mass3/4 and exit occupancy1/4, so the equivalent local exit probability is1/3. Directly averaging the local rows gives cost1/3 and violates the normalized budget1/4. A separate one-state control gives a randomized optimum strictly better than every feasible deterministic policy; a tied correct Lagrange multiplier still needs a feasible primal mixture.
-
-The separate occupancy API enumerates every deterministic policy, constructs the exact attainable cost/reward projection, clips its budget, and returns a two-policy occupancy witness, normalized local action probabilities, every flow row, a re-solved stationary occupancy and a matching dual upper bound. Every action's Bellman inequality and complementarity product is visible. A truly impossible budget gets an attainable minimum-cost lower certificate, not a fake plan. Unreachable states, zero discount, signed costs, slack budgets, whole tied faces, coincident projections and point/line geometry have explicit controls.
-
-The fourth workflow adds18Python tests to the retained70. Native Gauss-Jordan/monotone-chain generation and a separate Cramer/supporting-line checker agree with the browser's exact BigInt reports on861complete inputs. An extra direct full-flow-LP vertex oracle checks28controls/seededmodels. Actual optional SciPy1.15.3/HiGHS solves the full constrained and minimum-cost LPs1,722times across861cases, with explicit numerical tolerance, not an exact arithmetic claim for HiGHS. Four Node/actual-Chrome tests include every policy/feasible vertex, displayed flow/slack rows at1280/390/320 and12trusted completed JSON downloads. Fresh installed-wheel checks preserve all three earlier demo families and both existing entrypoints.
-
-```sh
-python -m bellmanlab.occupancy_cli demo --control visitation_reweighting
-python -m bellmanlab.occupancy_cli run input.json > certificate.json
-python -m bellmanlab.occupancy_cli verify certificate.json
-bellmanlab-occupancy demo --control randomization_gap
-```
-
-This is a supplied discounted finite model with **one normalized expected-cost constraint**, not a hard trajectory guarantee, new learning method or scalable optimizer. Limits are four states/eight actions; the hull is a two-dimensional return projection, not the full occupancy polytope. All optimal polygon vertices are returned, not all tied policies. Zero-visit first-action fallbacks are arbitrary and labeled. A separate direct LP oracle does operate on full occupancy vertices. All original ordinary/rectangular robust APIs, CLI, three figures and original test sources stay unchanged; this does not combine robust uncertainty with the new constraint. See the exact scaling, independent-check limitations, numerical tolerances and seven-source ledger in [OCCUPANCY.md](OCCUPANCY.md).
-
-## Two budgets. One policy.
-
-[Two-budget full-occupancy inspector](https://midya8.github.io/bellmanlab/coupled.html) · [Contract, derivation, checks and sources](COUPLED.md)
-
-BellmanLab 0.5 adds a separate exact workflow for **two simultaneous normalized expected-cost bounds**. It retains every full feasible state/action occupancy vertex, even when different occupancies have identical cost/reward projections, then extracts a stationary randomized policy and checks a matching two-price dual bound. A jointly impossible pair gets a weighted minimum-cost separating certificate, not a failed deterministic search or fake plan.
-
-The default's three actions have `(reward,cost0,cost1)=(0,0,0),(3,1,0),(2,0,1)`. Budgets `1/3,1/4` require optimal weights `5/12,1/3,1/4`: reward `3/2`, versus 0 for the best feasible deterministic policy. No pair of deterministic policies attains that optimum. Another control has separately attainable budgets that are jointly impossible, with an exact separating gap `1/6`. The route control distinguishes a three-policy episode mixture from visit-reweighted local probabilities; direct row averaging violates both budgets.
-
-```sh
-python -m bellmanlab.coupled_cli demo --control three_way
-python -m bellmanlab.coupled_cli run input.json > report.json
-python -m bellmanlab.coupled_cli verify report.json
-bellmanlab-coupled demo --control jointly_impossible
-```
-
-The independent determinant/policy-simplex checker reconstructs all full vertices and every dependent certificate field without generator solving/basis/assembly helpers. Valid alternative proof multipliers are accepted.103 Python/8 Node tests, 822 complete native/BigInt reports, actual HiGHS solves, fresh installed-wheel reproduction and actual Chrome/download checks are documented with their precise limits in [COUPLED.md](COUPLED.md). This remains supplied finite dynamics, a common discount and expectations, not learned behavior or per-trajectory safety. Original ordinary, rectangular robust and one-budget source/test files remain unchanged; a small link is added to the earlier browser page.
